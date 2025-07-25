@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tag_Input</title>
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="stylesheet" href="./src/style/style.css" />
+    <script type="module" src="./src/index.js"></script>
+    <script type="module" src="./src/theme-toggle.js"></script>
+  </head>
+
+  <body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌜 切換主題</button>
+    <h1 class="title">標籤輸入元件</h1>
+    <div id="tagComponent" class="container"></div>
+    <script>
+      let demo;
+      // create a TagInput component for demo
+      document.addEventListener("DOMContentLoaded", function () {
+        const container = document.getElementById("tagComponent");
+        demo = new TagInput(container, {
+          maxTags: 10,
+          placeholder: "輸入標籤...",
+          initialTags: ["javascript", "html", "css"],
+        });
+      });
+
+      // check theme preference
+      if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark");
+      }
+    </script>
+  </body>
+</html>
