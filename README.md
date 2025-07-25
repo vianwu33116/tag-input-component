@@ -2,6 +2,7 @@
 
 本專案用 Vite Vanilla 來建置，在不使用前端框架的前提，使用 JavaScript 來創建一個可以重複使用的標籤輸入元件。
 ![tag-input](https://github.com/user-attachments/assets/7bf008cf-35da-4edf-8d6b-e866120dbb1f)
+[demo](https://tag-input-component.onrender.com/)
 
 ## 環境
 * Node.js: v20.19.3 (建議 Node 版本 ^18 或 ^20（LTS）)
