@@ -5,22 +5,30 @@
 [demo](https://tag-input-component.onrender.com/)
 
 ## 環境
-* Node.js: v20.19.3 (建議 Node 版本 ^18 或 ^20（LTS）)
-* NPM: v10.8.2
+
+- Node.js: v20.19.3 (建議 Node 版本 ^18 或 ^20（LTS）)
+- NPM: v10.8.2
 
 ## 建置
+
 ### 初始安裝
+
 ```
 npm install
 ```
+
 ### 開發模式
+
 ```
 npm run dev
 ```
+
 ### 測試
+
 ```
 npm run test
 ```
+
 測試結果圖示
 ![test-result](https://github.com/user-attachments/assets/5f3afd25-d216-42b8-b01e-64e44d11664a)
 
