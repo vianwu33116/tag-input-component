@@ -199,10 +199,14 @@ export default class TagInput {
           item.tabIndex = 0;
           item.role = "option";
           item.ariaSelected = true;
-          item.addEventListener("click", () => this.handleAutocompleteClick(tag));
-          item.addEventListener("keydown", (e) => this.handleAutocompleteKeyDown(e, tag));
           this.autocompleteList.appendChild(item);
         });
+    });
+    this.autocompleteList.addEventListener("click", (e) => {
+      if (e.target.tagName === "LI") this.handleAutocompleteClick(e);
+    });
+    this.autocompleteList.addEventListener("keydown", (e) => {
+      if (e.target.tagName === "LI") this.handleAutocompleteKeyDown(e);
     });
 
     function highlightMatch(tag, keyword) {
@@ -218,12 +222,12 @@ export default class TagInput {
     document.addEventListener("click", (e) => this.handleDocClick(e));
   }
 
-  handleAutocompleteClick(tag){
-    this.autocompleteAdd(tag);
+  handleAutocompleteClick(e) {
+    this.autocompleteAdd(e.target.textContent);
   }
 
-  handleAutocompleteKeyDown(e, tag) {
-    if(e.key === "Enter") this.autocompleteAdd(tag);
+  handleAutocompleteKeyDown(e) {
+    if (e.key === "Enter") this.autocompleteAdd(e.target.textContent);
   }
 
   autocompleteAdd(tag) {
@@ -238,6 +242,14 @@ export default class TagInput {
     this.inputField.removeEventListener("keydown", this.handleInputKeyDown);
     this.tagList.removeEventListener("click", this.handleTagClick);
     this.tagList.removeEventListener("keydown", this.handleTagKeyDown);
+    this.autocompleteList.removeEventListener(
+      "click",
+      this.handleAutocompleteClick
+    );
+    this.autocompleteList.removeEventListener(
+      "keydown",
+      this.handleAutocompleteKeyDown
+    );
     document.removeEventListener("click", this.handleDocClick);
     this.container.innerHTML = "";
   }
