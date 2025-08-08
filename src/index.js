@@ -1,3 +1,4 @@
+const definedTag = ["javascript", "java", "html", "css"];
 export default class TagInput {
   constructor(container, options = {}) {
     this.container = container;
@@ -21,6 +22,7 @@ export default class TagInput {
   init() {
     this.createInput();
     this.bindEvents();
+    this.autocomplete();
     this.render();
   }
 
@@ -39,6 +41,7 @@ export default class TagInput {
                                 autocomplete="off"
                                 maxlength="${this.options.maxStrLength}"
                             >
+                            <ul class="autocomplete-list"></ul>
                         </div>
                         <div class="error-message" role="alert" aria-live="polite"></div>
                         <div class="tag-counter">
@@ -52,17 +55,20 @@ export default class TagInput {
     this.tagInput = this.container.querySelector(".tag-input");
     this.tagList = this.container.querySelector(".tag-list");
     this.inputField = this.container.querySelector(".tag-input-field");
+    this.autocompleteList = this.container.querySelector(".autocomplete-list");
     this.errorMessage = this.container.querySelector(".error-message");
     this.counterCurrent = this.container.querySelector(".current-count");
   }
 
   bindEvents() {
-    this.inputField.addEventListener("keydown", (e) => this.handleKeyDown(e));
+    this.inputField.addEventListener("keydown", (e) =>
+      this.handleInputKeyDown(e)
+    );
     this.tagList.addEventListener("click", (e) => this.handleTagClick(e));
     this.tagList.addEventListener("keydown", (e) => this.handleTagKeyDown(e));
   }
 
-  handleKeyDown(e) {
+  handleInputKeyDown(e) {
     const value = this.inputField.value;
     const isEntered = e.key === "," || e.key === "Enter";
     if (isEntered && value) {
@@ -171,11 +177,68 @@ export default class TagInput {
     return cleanedStr;
   }
 
+  closeAutocompleteList() {
+    this.autocompleteList.innerHTML = "";
+  }
+
+  handleDocClick(e) {
+    if (!e.target.classList.contains("tag-input")) this.closeAutocompleteList();
+  }
+
+  autocomplete() {
+    this.inputField.addEventListener("input", () => {
+      const val = this.arrangeString(this.inputField.value);
+      this.closeAutocompleteList();
+
+      definedTag
+        .filter((tag) => tag.toLowerCase().includes(val))
+        .forEach((tag) => {
+          const item = document.createElement("li");
+          item.innerHTML = highlightMatch(tag, val);
+          item.classList.add("autocomplete-item");
+          item.tabIndex = 0;
+          item.role = "option";
+          item.ariaSelected = true;
+          item.addEventListener("click", () => this.handleAutocompleteClick(tag));
+          item.addEventListener("keydown", (e) => this.handleAutocompleteKeyDown(e, tag));
+          this.autocompleteList.appendChild(item);
+        });
+    });
+
+    function highlightMatch(tag, keyword) {
+      const idx = tag.toLowerCase().indexOf(keyword);
+      if (idx === -1) return tag;
+      return (
+        tag.substring(0, idx) +
+        `<strong>${tag.substring(idx, idx + keyword.length)}</strong>` +
+        tag.substring(idx + keyword.length)
+      );
+    }
+
+    document.addEventListener("click", (e) => this.handleDocClick(e));
+  }
+
+  handleAutocompleteClick(tag){
+    this.autocompleteAdd(tag);
+  }
+
+  handleAutocompleteKeyDown(e, tag) {
+    if(e.key === "Enter") this.autocompleteAdd(tag);
+  }
+
+  autocompleteAdd(tag) {
+    this.addTag(tag);
+    this.inputField.value = "";
+    this.closeAutocompleteList();
+    this.inputField.focus();
+  }
+
   destroy() {
     if (this.errorTimeout) clearTimeout(this.errorTimeout);
-    this.inputField.removeEventListener("keydown", this.handleKeyDown);
+    this.inputField.removeEventListener("keydown", this.handleInputKeyDown);
     this.tagList.removeEventListener("click", this.handleTagClick);
     this.tagList.removeEventListener("keydown", this.handleTagKeyDown);
+    document.removeEventListener("click", this.handleDocClick);
     this.container.innerHTML = "";
   }
 }
