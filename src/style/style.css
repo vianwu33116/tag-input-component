@@ -9,6 +9,15 @@ body {
   padding: 20px;
 }
 
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+strong {
+  color: var(--input-focus);
+}
+
 .title {
   text-align: center;
 }
@@ -52,8 +61,28 @@ body {
   color: var(--light-text-color);
 }
 
+.autocomplete-list {
+  border: 1px solid var(--border-color);
+  max-height: 150px;
+  overflow-y: auto;
+  position: absolute;
+  top: 66px;
+  background: var(--bg-color);
+  z-index: 100;
+}
+
+.autocomplete-item {
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.autocomplete-item:hover {
+  background: var(--tag-bg);
+}
+
 .tag-counter {
   color: var(--light-text-color);
+  text-align: right;
 }
 
 .error-message {
